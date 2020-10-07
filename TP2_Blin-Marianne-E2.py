@@ -6,10 +6,8 @@ from math import *
 from random import randint
 
 
-
-#n = int(input("Taille n de la matrice : n = "))
-
 def Inv_definie_positive(n): #Det(A) ≠ 0 ⇔ A inversible
+    """
     M = np.random.randn(n,n)
     A = M.T@M
     d = np.linalg.det(A)
@@ -17,21 +15,24 @@ def Inv_definie_positive(n): #Det(A) ≠ 0 ⇔ A inversible
         M = np.random.randn(n,n)
         A = M.T@M
         d = np.linalg.det(A)
-    #print (d, A)
+    return A
+    """
+    d=0
+    while d == 0 :
+        M = np.random.randn(n,n)
+        A = M.T@M
+        d = np.linalg.det(A)
     return A
 
-#A = Inv_definie_positive(n)
-
-B = np.array([[6.,6.,16.],[-3.,-9.,-2.],[6.,-6.,-8.]])
 
 def DecompositionGS (A):
-    
+
     l,c = A.shape
 
     #Etape 1 : cas particulier où j = 0
     R = np.zeros((l,c))
     R[0,0] = np.linalg.norm(A[:,0])
-    
+
     Q = np.zeros((l,c))
     Q[:,0] = A[:,0]/R[0,0]
 
@@ -45,14 +46,12 @@ def DecompositionGS (A):
         R[j,j] = np.linalg.norm(W[:,j]) #3) Calcul de rjj
         Q[:,j] = W[:,j]/R[j,j] #4) Calcul de qj
 
-    print("Q = ", Q, "\n", "R = ", R)
+    # print("Q = ", Q, "\n", "R = ", R)
     return Q,R
 
-[Q,R] = DecompositionGS (B) #On retrouve les résultats de l'ex 2 du TD2
 
-#Vérification :
 def Verif (A,Q,R):
-    
+
     #Check if QR = A
     if (Q@R).all() == A.all() :
         print ("QR = A")
@@ -60,7 +59,7 @@ def Verif (A,Q,R):
         print ("QR != A, erreur.")
 
     #Check if R upper triangular
-    if np.allclose(R, np.triu(R)) : 
+    if np.allclose(R, np.triu(R)) :
         print ("R triangulaire sup.")
     else:
         print ("R n'est pas triangulaire sup., erreur.")
@@ -71,9 +70,6 @@ def Verif (A,Q,R):
         print ("Q orthogonale.")
     else:
         print ("Q non orthogonale, erreur.")
-
-V = Verif (B,Q,R)
-
 
 
 def ResolutionSystTriSup(Taug): #Résolution d'un système triangulaire supérieur
@@ -86,26 +82,21 @@ def ResolutionSystTriSup(Taug): #Résolution d'un système triangulaire supérie
         X[k] = (Taug[k,-1] - S)/Taug[k,k]
     return X
 
-b = np.random.randn(3,1)
 
 def ResolGS (A,b):
     [Q,R] = DecompositionGS (A)
     Taug = np.column_stack((R,Q.T@b))
     X = ResolutionSystTriSup(Taug) #RX = Qtb
     X_verif = np.linalg.solve(R,Q.T@b)
-    print (X,X_verif)
+    #print (X,X_verif)
     return X,X_verif
 
-X,X_verif = ResolGS (B,b)
 
-#VERIF
-
-        
-        
-            
-            
-    
-
-
-
-
+if __name__ == '__main__':
+    #partie1
+    B = np.array([[6.,6.,16.],[-3.,-9.,-2.],[6.,-6.,-8.]])
+    [Q,R] = DecompositionGS (B)
+    V = Verif (B,Q,R)
+    #Partie2
+    b = np.random.randn(3,1)
+    X,X_verif = ResolGS (B,b)
