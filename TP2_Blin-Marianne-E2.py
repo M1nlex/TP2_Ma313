@@ -6,7 +6,7 @@ from math import *
 from random import randint
 
 
-def Inv_definie_positive(n): #Det(A) ≠ 0 ⇔ A inversible
+def Inv_definie_positive(n):  # (A) ≠ 0 ⇔ A inversible
     """
     M = np.random.randn(n,n)
     A = M.T@M
@@ -72,10 +72,10 @@ def Verif (A, Q, R):
         print("Q non orthogonale, erreur.")
 
 
-def ResolutionSystTriSup(Taug): #Résolution d'un système triangulaire supérieur
+def ResolutionSystTriSup(Taug):  # Résolution d'un système triangulaire supérieur
     n, m = Taug.shape
-    X = np.zeros(n) #Création d'un vecteur solution de taille n
-    for k in range(n-1, -1, -1): #Par remontée
+    X = np.zeros(n)  # Création d'un vecteur solution de taille n
+    for k in range(n-1, -1, -1):  # Par remontée
         S = 0
         for j in range(k+1, n):
             S += (Taug[k, j]*X[j])
@@ -94,9 +94,9 @@ def ResolGS (A, b):
 
 if __name__ == '__main__':
     #partie1
-    B = np.array([[6.,6.,16.],[-3.,-9.,-2.],[6.,-6.,-8.]])
+    B = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(B)
-    V = Verif (B,Q,R)
+    V = Verif (B, Q, R)
     #Partie2
     b = np.random.randn(3, 1)
     X, X_verif = ResolGS(B, b)
