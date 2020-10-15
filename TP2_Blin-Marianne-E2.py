@@ -7,20 +7,10 @@ from random import randint
 
 
 def Inv_definie_positive(n): #Det(A) ≠ 0 ⇔ A inversible
-    """
-    M = np.random.randn(n,n)
-    A = M.T@M
-    d = np.linalg.det(A)
-    while d == 0 :
-        M = np.random.randn(n,n)
-        A = M.T@M
-        d = np.linalg.det(A)
-    return A
-    """
     d=0
     while d == 0 :
         M = np.random.randn(n,n)
-        A = M.T@M
+        A = np.dot(M.T,M) #M.T@M
         d = np.linalg.det(A)
     return A
 
@@ -91,6 +81,8 @@ def ResolGS (A,b):
     #print (X,X_verif)
     return X,X_verif
 
+def Comparer_temps_erreur ():
+    
 
 if __name__ == '__main__':
     #partie1
