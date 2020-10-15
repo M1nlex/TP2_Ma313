@@ -64,7 +64,7 @@ def Verif (A, Q, R):
     else:
         print("R n'est pas triangulaire sup., erreur.")
 
-    #Check if Q orthogonale
+    # Check if Q orthogonale
     n = Q.shape[0]
     if (Q@Q.T).all() == (np.identity(n)).all():
         print("Q orthogonale.")
@@ -86,17 +86,17 @@ def ResolutionSystTriSup(Taug):  # Résolution d'un système triangulaire supér
 def ResolGS (A, b):
     [Q, R] = DecompositionGS(A)
     Taug = np.column_stack((R, Q.T@b))
-    X = ResolutionSystTriSup(Taug) #RX = Qtb
+    X = ResolutionSystTriSup(Taug)  # RX = Qtb
     X_verif = np.linalg.solve(R, Q.T@b)
-    #print (X,X_verif)
+    # print (X,X_verif)
     return X, X_verif
 
 
 if __name__ == '__main__':
-    #partie1
+    # partie1
     B = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(B)
     V = Verif (B, Q, R)
-    #Partie2
+    # Partie2
     b = np.random.randn(3, 1)
     X, X_verif = ResolGS(B, b)
