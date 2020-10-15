@@ -19,7 +19,7 @@ def DecompositionGS(A):
 
     l, c = A.shape
 
-    #Etape 1 : cas particulier où j = 0
+    # Etape 1 : cas particulier où j = 0
     R = np.zeros((l, c))
     R[0, 0] = np.linalg.norm(A[:, 0])
 
@@ -27,14 +27,14 @@ def DecompositionGS(A):
     Q[:, 0] = A[:, 0]/R[0, 0]
 
     W = np.zeros((l, c))
-    for j in range(1, c): #n-1 étapes restantes
+    for j in range(1, c):  # n-1 étapes restantes
         S = np.zeros((l, 1))
         for i in range(0, j):
-            R[i, j] = Q[:, i]@A[:, j] #1) Calcul des coeff de R rij
+            R[i, j] = Q[:, i]@A[:, j]  # 1) Calcul des coeff de R rij
             S[:, 0] += R[i, j] * Q[:, i]
-        W[:, j] = A[:, j] - S[:, 0] #2) Calcul d'un vect intermédiaire W
-        R[j, j] = np.linalg.norm(W[:, j]) #3) Calcul de rjj
-        Q[:, j] = W[:, j]/R[j, j] #4) Calcul de qj
+        W[:, j] = A[:, j] - S[:, 0]  # 2) Calcul d'un vect intermédiaire W
+        R[j, j] = np.linalg.norm(W[:, j])  # 3) Calcul de rjj
+        Q[:, j] = W[:, j]/R[j, j]  # 4) Calcul de qj
 
     # print("Q = ", Q, "\n", "R = ", R)
     return Q, R
@@ -42,13 +42,13 @@ def DecompositionGS(A):
 
 def Verif (A, Q, R):
 
-    #Check if QR = A
+    # Check if QR = A
     if (Q@R).all() == A.all():
         print("QR = A")
     else:
         print("QR != A, erreur.")
 
-    #Check if R upper triangular
+    # Check if R upper triangular
     if np.allclose(R, np.triu(R)):
         print("R triangulaire sup.")
     else:
