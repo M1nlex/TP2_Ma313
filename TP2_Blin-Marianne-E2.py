@@ -91,12 +91,39 @@ def ResolGS (A,b):
     #print (X,X_verif)
     return X,X_verif
 
+def test_proba_definie_positive(n,m):
+    liste_abscisse = []
+    liste_ordonee = []
+    for i in range (1,n+1):
+        print('taille de matrice en cours :' + str(i))
+        liste_abscisse.append(i)
+        nbr = 0
+        for j in range(0,m):
+            M = np.random.randn(i,i)
+            try:
+                A = np.linalg.inv(M)
+                nbr += 1
+            except:
+                pass
+        liste_ordonee.append((nbr/m)*100)
+    print(liste_ordonee)
+    plt.plot(liste_abscisse,liste_ordonee)
+    plt.xlabel('Taille matrice')
+    plt.ylabel('Probabilité de matrice inverse sur '+str(m)+' essais (en %)')
+    plt.show()
 
 if __name__ == '__main__':
     #partie1
+    """
     B = np.array([[6.,6.,16.],[-3.,-9.,-2.],[6.,-6.,-8.]])
     [Q,R] = DecompositionGS (B)
     V = Verif (B,Q,R)
+    """
     #Partie2
+    """
     b = np.random.randn(3,1)
     X,X_verif = ResolGS (B,b)
+    """
+    #Tests cohérence résultats
+    test_proba_definie_positive(30,5000)
+    #print(np.random.randn(4,4))
