@@ -82,7 +82,7 @@ def ResolGS (A, b):
     return X, X_verif
 
 def Comparer_temps_erreur ():
-
+    pass
 def test_proba_definie_positive(n,m):
     liste_abscisse = []
     liste_ordonee = []
@@ -105,6 +105,7 @@ def test_proba_definie_positive(n,m):
     plt.show()
 
 if __name__ == '__main__':
+"""
     # partie1
     B = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(B)
@@ -112,3 +113,4 @@ if __name__ == '__main__':
     # Partie2
     b = np.random.randn(3, 1)
     X, X_verif = ResolGS(B, b)
+"""
