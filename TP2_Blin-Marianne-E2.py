@@ -260,6 +260,7 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
         e7 = []
 
         N.append(k)
+        print(k)
 
         for j in range(0,NbrParTaille):
 
@@ -406,4 +407,4 @@ if __name__ == '__main__':
     V_2 = Verif2(X, C, D)
     #Partie3
     """
-    Temps = Comparer_temps_moyenne(10,10)
+    Temps = Comparer_temps_moyenne(500,20)
