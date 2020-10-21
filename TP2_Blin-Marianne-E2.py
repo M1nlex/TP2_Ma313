@@ -385,7 +385,7 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
     plt.plot(N,TGCPTE,".:",label = "Gauss choix pivot total")
     plt.plot(N,TGSE,".:",label = "Gram-Schmidt")
     plt.plot(N,TLUE,".:",label = "Décomposition LU")
-    plt.plot(N,TNPE,".:",label = "Numpy")
+    #plt.plot(N,TNPE,".:",label = "Numpy")
 
     plt.legend(loc = "upper left")
     plt.title("Erreur relative de X en fonction de la taille des matrices\n", fontsize=12)
