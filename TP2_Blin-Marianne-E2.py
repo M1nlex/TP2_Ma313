@@ -91,7 +91,7 @@ def Verif2(X, A, B):
         print("Erreur.")
 
 
-def Comparer_temps():
+def Comparer_temps(limTaille=100):
     TC = [] #Temps de calcul décompo Cholesky
     TGSCP = [] #Temps de calcul GaussSansChoixPivot
     TGCPP = [] #Temps de calcul GaussChoixPivotPartiel
@@ -101,12 +101,13 @@ def Comparer_temps():
     TNP =[] #Temps de calcul numpy
 
     N = [] #Taille matrice
-    for k in range (1, 500, 2):
+    for k in range (1, limTaille, 1):
         N.append(k)
-
+        # Génération matrice commune pour toutes les solutions
         A = Inv_definie_positive(k)
         B = np.random.randn(k,1)
 
+        # Calcul temps de calcul pour chaque méthode
         t0 = time.perf_counter()
         X1 = ResolCholesky(A,B)
         t = time.perf_counter()
@@ -148,7 +149,7 @@ def Comparer_temps():
         t12 = time.perf_counter()
 
         g = t12 - t11
-
+        # Ajout valeurs du temps de calcul pour cette itération
         TC.append(a)
         TGSCP.append(b)
         TGCPP.append(c)
@@ -158,7 +159,7 @@ def Comparer_temps():
         TNP.append(g)
 
     plt.ylabel("Temps de calcul (s)")
-    plt.yscale("log")
+    #plt.yscale("log")
 
     plt.xlabel("Taille de la matrice")
     #plt.xscale("log")
@@ -220,6 +221,177 @@ def test_non_inversible():
     except:
         print("non")
 
+def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
+    TC = [] #Temps de calcul décompo Cholesky
+    TGSCP = [] #Temps de calcul GaussSansChoixPivot
+    TGCPP = [] #Temps de calcul GaussChoixPivotPartiel
+    TGCPT = [] #Temps de calcul GaussChoixPivotTotal
+    TGS = [] #Temps de calcul Gram-Schmidt
+    TLU = [] #Temps de calcul avec décompo LU
+    TNP =[] #Temps de calcul numpy
+
+    TCE = [] #Erreur de calcul décompo Cholesky
+    TGSCPE = [] #Erreur de calcul GaussSansChoixPivot
+    TGCPPE = [] #Erreur de calcul GaussChoixPivotPartiel
+    TGCPTE = [] #Erreur de calcul GaussChoixPivotTotal
+    TGSE = [] #Erreur de calcul Gram-Schmidt
+    TLUE = [] #Erreur de calcul avec décompo LU
+    TNPE =[] #Erreur de calcul numpy
+
+    N = [] #Taille matrice
+    for k in range (1, limTaille, 1):
+
+        # Création des listes pour moyenne temps / Supression des données des itérations précédentes
+        l1 = []
+        l2 = []
+        l3 = []
+        l4 = []
+        l5 = []
+        l6 = []
+        l7 = []
+
+        # Création des listes pour moyenne erreur / Supression des données des itérations précédentes
+        e1 = []
+        e2 = []
+        e3 = []
+        e4 = []
+        e5 = []
+        e6 = []
+        e7 = []
+
+        N.append(k)
+
+        for j in range(0,NbrParTaille):
+
+            # Génération matrice commune pour toutes les solutions
+            A = Inv_definie_positive(k)
+            B = np.random.randn(k,1)
+
+            # Calcul temps de calcul pour chaque méthode
+            t0 = time.perf_counter()
+            X1 = ResolCholesky(A,B)
+            t = time.perf_counter()
+
+            a = t - t0
+            ae = np.linalg.norm( abs((A@X1)-B) )
+
+            t1 = time.perf_counter()
+            X2 = Gauss(A,B)
+            t2 = time.perf_counter()
+
+            b = t2 - t1
+            be = np.linalg.norm( abs((A@X2)-B) )
+
+            t3 = time.perf_counter()
+            X3 = GaussChoixPivotPartiel(A,B)
+            t4 = time.perf_counter()
+
+            c = t4 - t3
+            ce = np.linalg.norm( abs((A@X3)-B) )
+
+            t5 = time.perf_counter()
+            X4 = GaussChoixPivotTotal(A,B)
+            t6 = time.perf_counter()
+
+            d = t6 - t5
+            de = np.linalg.norm( abs((A@X4)-B) )
+
+            t7 = time.perf_counter()
+            X5 = ResolGS (A,B)
+            t8 = time.perf_counter()
+
+            e = t8 - t7
+            ee = np.linalg.norm( abs((A@X5)-B) )
+
+            t9 = time.perf_counter()
+            X6 = ResolutionLU(A,B)
+            t10 = time.perf_counter()
+
+            f = t10 - t9
+            fe = np.linalg.norm( abs((A@X6)-B) )
+
+            t11 = time.perf_counter()
+            X7 = np.linalg.solve(A,B)
+            t12 = time.perf_counter()
+
+            g = t12 - t11
+            ge = np.linalg.norm( abs((A@X7)-B) )
+
+            # Ajout de la valeur dans la liste pour le calcul de moyenne de temps
+            l1.append(a)
+            l2.append(b)
+            l3.append(c)
+            l4.append(d)
+            l5.append(e)
+            l6.append(f)
+            l7.append(g)
+            # Ajout de la valeur dans la liste pour le calcul de moyenne d'erreur
+            e1.append(ae)
+            e2.append(be)
+            e3.append(ce)
+            e4.append(de)
+            e5.append(ee)
+            e6.append(fe)
+            e7.append(ge)
+
+        # Ajout valeurs du temps de calcul pour cette itération
+        TC.append(sum(l1)/NbrParTaille)
+        TGSCP.append(sum(l2)/NbrParTaille)
+        TGCPP.append(sum(l3)/NbrParTaille)
+        TGCPT.append(sum(l4)/NbrParTaille)
+        TGS.append(sum(l5)/NbrParTaille)
+        TLU.append(sum(l6)/NbrParTaille)
+        TNP.append(sum(l7)/NbrParTaille)
+
+        # Ajout valeurs du temps de calcul pour cette itération
+        TCE.append(sum(e1)/NbrParTaille)
+        TGSCPE.append(sum(e2)/NbrParTaille)
+        TGCPPE.append(sum(e3)/NbrParTaille)
+        TGCPTE.append(sum(e4)/NbrParTaille)
+        TGSE.append(sum(e5)/NbrParTaille)
+        TLUE.append(sum(e6)/NbrParTaille)
+        TNPE.append(sum(e7)/NbrParTaille)
+
+    # Premier graph (temps)
+    plt.ylabel("Temps de calcul (s)")
+    #plt.yscale("log")
+
+    plt.xlabel("Taille de la matrice")
+    #plt.xscale("log")
+
+    plt.plot(N,TC,".:",label = "Décomposition de Cholesky")
+    plt.plot(N,TGSCP,".:",label = "Gauss sans choix pivot")
+    plt.plot(N,TGCPP,".:",label = "Gauss choix pivot partiel")
+    plt.plot(N,TGCPT,".:",label = "Gauss choix pivot total")
+    plt.plot(N,TGS,".:",label = "Gram-Schmidt")
+    plt.plot(N,TLU,".:",label = "Décomposition LU")
+    plt.plot(N,TNP,".:",label = "Numpy")
+
+    plt.legend(loc = "upper left")
+    plt.title("Temps de résolution d'un système en fonction de la taille n de A \n", fontsize=12)
+
+    plt.show()
+
+    # Deuxième graph (erreur)
+    plt.ylabel("Erreur relative")
+    #plt.yscale("log")
+
+    plt.xlabel("Taille de la matrice")
+    #plt.xscale("log")
+
+    plt.plot(N,TCE,".:",label = "Décomposition de Cholesky")
+    plt.plot(N,TGSCPE,".:",label = "Gauss sans choix pivot")
+    plt.plot(N,TGCPPE,".:",label = "Gauss choix pivot partiel")
+    plt.plot(N,TGCPTE,".:",label = "Gauss choix pivot total")
+    plt.plot(N,TGSE,".:",label = "Gram-Schmidt")
+    plt.plot(N,TLUE,".:",label = "Décomposition LU")
+    plt.plot(N,TNPE,".:",label = "Numpy")
+
+    plt.legend(loc = "upper left")
+    plt.title("Erreur relative de X en fonction de la taille des matrices\n", fontsize=12)
+
+    plt.show()
+
 if __name__ == '__main__':
     """
     # partie1
@@ -233,4 +405,5 @@ if __name__ == '__main__':
     X = ResolGS(C, D)
     V_2 = Verif2(X, C, D)
     #Partie3
-    Temps = Comparer_temps()
+    """
+    Temps = Comparer_temps_moyenne(50,50)
