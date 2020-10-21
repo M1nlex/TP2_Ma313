@@ -45,7 +45,7 @@ def DecompositionGS(A):
 def Verif(A, Q, R):
 
     # Check if QR = A
-    if (Q@R).all() == A.all():
+    if (np.dot(Q,R)).all() == A.all():
         print("QR = A")
     else:
         print("QR != A, erreur.")
@@ -58,10 +58,10 @@ def Verif(A, Q, R):
 
     # Check if Q orthogonale
     n = Q.shape[0]
-    if (Q@Q.T).all() == (np.identity(n)).all():
-        print("Q orthogonale.")
+    if (np.dot(Q,Q.T)).all() == (np.identity(n)).all():
+        print("Q orthogonale.","\n")
     else:
-        print("Q non orthogonale, erreur.")
+        print("Q non orthogonale, erreur.","\n")
 
 
 def ResolutionSystTriSup(Taug):  # Résolution d'un système triangulaire supérieur
@@ -86,7 +86,7 @@ def Verif2(X, A, B):
     # Check if X = X_verif
     X_verif = np.linalg.solve(A,B)
     if (X).all() == (X_verif).all():
-        print("X = X_verif, la fonction fonctionne :)")
+        print("X_GS = X_numpy, la fonction fonctionne :)")
     else:
         print("Erreur.")
 
@@ -394,17 +394,42 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
     plt.show()
 
 if __name__ == '__main__':
+
     """
-    # partie1
+    # partie 1.1 : test décompo QR sur matrice du TD
     A = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(A)
+    print("Q = ", Q, "\n", "R = ", R)
     V = Verif (A, Q, R)
-    # Partie2
+
+    # partie 1.2 : test décompo QR sur matrice aléatoire de taille n choisie
+    n_1 = int(input("Taille désirée : "))
+    Aleatoire = np.random.randn(n_1,n_1)
+    [Q_1, R_1] = DecompositionGS(Aleatoire)
+    print("Q = ", Q_1, "\n", "R = ", R_1)
+    # Vérif
+    if (np.dot(Q_1,R_1)).all() == Aleatoire.all():
+        print("QR = A")
+    else:
+        print("QR != A, erreur.")
+    if np.allclose(R, np.triu(R)):
+        print("R triangulaire sup.")
+    else:
+        print("R n'est pas triangulaire sup., erreur.")
+    if abs((np.dot(Q_1,(Q_1).T) - np.identity(n_1)).all()) <= 0.01:
+        print("Q orthogonale.","\n")
+    else:
+        print("Q non orthogonale, erreur.","\n")
+    """
+    """
+    # Partie 2 : résolution des systèmes aléatoires
     n = int(input("Taille désirée : "))
     C = Inv_definie_positive(n)
     D = np.random.randn(n, 1)
+    print("Soit A une matrice de taille n = ", n, "\n", "A = ", C, "\n", "On veut résoudre AX = B avec B = ", D)
     X = ResolGS(C, D)
+    print("Avec Gram-Schmidt, on obtient X_GS = ", X)
+    print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
-    #Partie3
     """
     Temps = Comparer_temps_moyenne(500,20)
