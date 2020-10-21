@@ -375,7 +375,7 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
 
     # Deuxième graph (erreur)
     plt.ylabel("Erreur relative")
-    #plt.yscale("log")
+    plt.yscale("log")
 
     plt.xlabel("Taille de la matrice")
     #plt.xscale("log")
@@ -386,7 +386,7 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
     plt.plot(N,TGCPTE,".:",label = "Gauss choix pivot total")
     plt.plot(N,TGSE,".:",label = "Gram-Schmidt")
     plt.plot(N,TLUE,".:",label = "Décomposition LU")
-    #plt.plot(N,TNPE,".:",label = "Numpy")
+    plt.plot(N,TNPE,".:",label = "Numpy")
 
     plt.legend(loc = "upper left")
     plt.title("Erreur relative de X en fonction de la taille des matrices\n", fontsize=12)
@@ -432,4 +432,4 @@ if __name__ == '__main__':
     print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
     """
-    Temps = Comparer_temps_moyenne(500,20)
+    Temps = Comparer_temps_moyenne(50,50)
