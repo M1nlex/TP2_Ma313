@@ -269,42 +269,42 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
 
             # Calcul temps de calcul pour chaque méthode
             t0 = time.perf_counter()
-            X1 = ResolCholesky(A,B)
+            X1 = np.transpose([ResolCholesky(A,B)])
             t = time.perf_counter()
 
             a = t - t0
             ae = np.linalg.norm( abs((A@X1)-B) )
 
             t1 = time.perf_counter()
-            X2 = Gauss(A,B)
+            X2 = np.transpose([Gauss(A,B)])
             t2 = time.perf_counter()
 
             b = t2 - t1
             be = np.linalg.norm( abs((A@X2)-B) )
 
             t3 = time.perf_counter()
-            X3 = GaussChoixPivotPartiel(A,B)
+            X3 = np.transpose([GaussChoixPivotPartiel(A,B)])
             t4 = time.perf_counter()
 
             c = t4 - t3
             ce = np.linalg.norm( abs((A@X3)-B) )
 
             t5 = time.perf_counter()
-            X4 = GaussChoixPivotTotal(A,B)
+            X4 = np.transpose([GaussChoixPivotTotal(A,B)])
             t6 = time.perf_counter()
 
             d = t6 - t5
             de = np.linalg.norm( abs((A@X4)-B) )
 
             t7 = time.perf_counter()
-            X5 = ResolGS (A,B)
+            X5 = np.transpose([ResolGS (A,B)])
             t8 = time.perf_counter()
 
             e = t8 - t7
             ee = np.linalg.norm( abs((A@X5)-B) )
 
             t9 = time.perf_counter()
-            X6 = ResolutionLU(A,B)
+            X6 = np.transpose([ResolutionLU(A,B)])
             t10 = time.perf_counter()
 
             f = t10 - t9
@@ -431,5 +431,4 @@ if __name__ == '__main__':
     print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
     """
-    # Partie 3 : comparaison temps de calcul
-    Temps = Comparer_temps_moyenne(50,50)
+    Temps = Comparer_temps_moyenne(10,10)
