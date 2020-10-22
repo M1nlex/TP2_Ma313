@@ -3,12 +3,12 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from math import *
-from random import randint
 from Methodes import *
 
 
-def Inv_definie_positive(n): #Det(A) ≠ 0 ⇔ A inversible
-    # Le produit d'une matrice et sa tranposée est
+def Inv_definie_positive(n):
+    #Det(A) ≠ 0 ⇔ A inversible
+    # Le produit d'une matrice et sa tranposée est symétrique défini positif
     d=0
     while d == 0 :
         M = np.random.randn(n,n)
@@ -42,7 +42,7 @@ def DecompositionGS(A):
     for j in range(1, c):  # n-1 étapes restantes
         S = np.zeros((l, 1))
         for i in range(0, j):
-            R[i, j] = Q[:, i]@A[:, j]  # 1) Calcul des coeff de R rij
+            R[i, j] = np.dot(Q[:, i],A[:, j])  # 1) Calcul des coeff de R rij
             S[:, 0] += R[i, j] * Q[:, i]
         W[:, j] = A[:, j] - S[:, 0]  # 2) Calcul d'un vect intermédiaire W
         R[j, j] = np.linalg.norm(W[:, j])  # 3) Calcul de rjj
@@ -224,7 +224,7 @@ def test_non_inversible():
     except:
         print("non")
 
-def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10, DefPosi=1):
+def Comparer_temps_erreur_moyenne(limTaille=100,NbrParTaille=10, DefPosi=1):
     if DefPosi==1:
         print("Les matrices seront définies positives, toutes les méthodes seront testées")
     else:
@@ -294,42 +294,42 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10, DefPosi=1):
             t2 = time.perf_counter()
 
             b = t2 - t1
-            be = np.linalg.norm( abs((A@X2)-B) )
+            be = np.linalg.norm( abs((np.dot(A,X2))-B) )
 
             t3 = time.perf_counter()
             X3 = np.transpose([GaussChoixPivotPartiel(A,B)])
             t4 = time.perf_counter()
 
             c = t4 - t3
-            ce = np.linalg.norm( abs((A@X3)-B) )
+            ce = np.linalg.norm( abs((np.dot(A,X3))-B) )
 
             t5 = time.perf_counter()
             X4 = np.transpose([GaussChoixPivotTotal(A,B)])
             t6 = time.perf_counter()
 
             d = t6 - t5
-            de = np.linalg.norm( abs((A@X4)-B) )
+            de = np.linalg.norm( abs((np.dot(A,X4))-B) )
 
             t7 = time.perf_counter()
             X5 = np.transpose([ResolGS (A,B)])
             t8 = time.perf_counter()
 
             e = t8 - t7
-            ee = np.linalg.norm( abs((A@X5)-B) )
+            ee = np.linalg.norm( abs((np.dot(A,X5))-B) )
 
             t9 = time.perf_counter()
             X6 = np.transpose([ResolutionLU(A,B)])
             t10 = time.perf_counter()
 
             f = t10 - t9
-            fe = np.linalg.norm( abs((A@X6)-B) )
+            fe = np.linalg.norm( abs((np.dot(A,X6))-B) )
 
             t11 = time.perf_counter()
             X7 = np.linalg.solve(A,B)
             t12 = time.perf_counter()
 
             g = t12 - t11
-            ge = np.linalg.norm( abs((A@X7)-B) )
+            ge = np.linalg.norm( abs((np.dot(A,X7))-B) )
 
             # Ajout de la valeur dans la liste pour le calcul de moyenne de temps
 
@@ -483,7 +483,6 @@ def cond_fonction_taille(n, t):
 
 if __name__ == '__main__':
 
-    """
     # partie 1.1 : test décompo QR sur matrice du TD
     A = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(A)
@@ -508,8 +507,7 @@ if __name__ == '__main__':
         print("Q orthogonale.","\n")
     else:
         print("Q non orthogonale, erreur.","\n")
-    """
-    """
+
     # Partie 2 : résolution des systèmes aléatoires
     n = int(input("Taille désirée : "))
     C = Inv_definie_positive(n)
