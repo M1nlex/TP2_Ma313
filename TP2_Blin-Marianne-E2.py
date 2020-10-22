@@ -522,7 +522,8 @@ if __name__ == '__main__':
     print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
     """
-    Temps = Comparer_temps_moyenne(50,50,0)
 
+
+    Temps = Comparer_temps_moyenne(50,50,0)
     erreur_avec_cond(100, 5)
     cond_fonction_taille(100, 100)
