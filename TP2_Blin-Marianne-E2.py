@@ -199,9 +199,7 @@ def test_proba_definie_positive(n,m):
             except:
                 liste_oui_ou_non.append(0)
                 pass
-        print(liste_oui_ou_non)
         liste_ordonee.append((nbr/m)*100)
-    print(liste_ordonee)
     plt.plot(liste_abscisse,liste_ordonee)
     plt.xlabel('Taille matrice')
     plt.ylabel('Probabilité de matrice inverse sur '+str(m)+' essais (en %)')
@@ -522,8 +520,10 @@ if __name__ == '__main__':
     print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
     """
+    #test_proba_definie_positive(100,500)
+    Comparer_temps_moyenne(200, 25)
 
-
-    Temps = Comparer_temps_moyenne(50,50,0)
+    """Temps = Comparer_temps_moyenne(50,50,0)
     erreur_avec_cond(100, 5)
     cond_fonction_taille(100, 100)
+"""
