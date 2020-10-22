@@ -226,7 +226,7 @@ def test_non_inversible():
     except:
         print("non")
 
-def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10, DefPosi=1):
+def Comparer_temps_erreur_moyenne(limTaille=100,NbrParTaille=10, DefPosi=1):
     if DefPosi==1:
         print("Les matrices seront définies positives, toutes les méthodes seront testées")
     else:
@@ -520,7 +520,7 @@ if __name__ == '__main__':
     print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
 
-    # Partie 3
-    Temps = Comparer_temps_moyenne(50,50,0)
+    # Partie 3 : comparaison temps erreur
+    Temps = Comparer_temps_erreur_moyenne(50,50,0)
     erreur_avec_cond(100, 5)
     cond_fonction_taille(100, 100)
