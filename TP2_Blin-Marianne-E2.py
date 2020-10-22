@@ -392,6 +392,77 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
 
     plt.show()
 
+def erreur_avec_cond(n, t):
+
+    erreur1 = []
+    erreur2 = []
+    erreur3 = []
+    cond = []
+
+    for i in range(1, n):
+        print(i)
+
+        A = Inv_definie_positive(t)
+        B = np.random.randn(t, 1)
+
+
+        X1 = np.transpose([ResolCholesky(A, B)])
+        ae = np.linalg.norm(abs((A @ X1) - B))
+
+        X2 = np.transpose([Gauss(A, B)])
+        be = np.linalg.norm(abs((A @ X2) - B))
+
+        X7 = np.linalg.solve(A, B)
+        ge = np.linalg.norm(abs((A @ X7) - B))
+
+        erreur1.append(ae)
+        erreur2.append(be)
+        erreur3.append(ge)
+        cond.append(np.linalg.cond(A))
+
+
+    #plt.plot(cond, erreur2, 'o', label="Gauss")
+    #plt.plot(cond, erreur3, 'o', label="Numpy")
+    plt.ylabel("Erreur relative")
+    plt.xlabel("Conditionnement")
+    plt.xscale("log")
+    plt.yscale("log")
+
+
+    plt.plot(cond, erreur1, 'o', label="Cholesky")
+
+    plt.legend(loc="upper left")
+    plt.show()
+
+
+def cond_fonction_taille(n, t):
+    taille = []
+
+    cond_moy = []
+    for j in range(1, t):
+        print(j)
+        cond = []
+        for i in range(1, n):
+
+            A = Inv_definie_positive(j)
+            cond.append(np.linalg.cond(A))
+
+
+        taille.append(j)
+        cond_moy.append(sum(cond)/(n-1))
+
+
+    plt.plot(taille, cond_moy, '.:', label="")
+    plt.ylabel("Cond")
+    plt.xlabel("taille")
+    #plt.xscale("log")
+    plt.yscale("log")
+
+    plt.show()
+
+
+
+
 if __name__ == '__main__':
     """
     # partie1
@@ -406,4 +477,7 @@ if __name__ == '__main__':
     V_2 = Verif2(X, C, D)
     #Partie3
     """
-    Temps = Comparer_temps_moyenne(10,10)
+    #Temps = Comparer_temps_moyenne(10,10)
+
+    erreur_avec_cond(100, 5)
+    cond_fonction_taille(100, 100)
