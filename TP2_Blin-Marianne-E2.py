@@ -482,7 +482,7 @@ def cond_fonction_taille(n, t):
 
 
 if __name__ == '__main__':
-
+"""
     # partie 1.1 : test décompo QR sur matrice du TD
     A = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(A)
@@ -517,11 +517,11 @@ if __name__ == '__main__':
     print("Avec Gram-Schmidt, on obtient X_GS = ", X)
     print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
-    """
     #test_proba_definie_positive(100,500)
-    Comparer_temps_moyenne(200, 25)
+    #Comparer_temps_moyenne(200, 25)
 
-    """Temps = Comparer_temps_moyenne(50,50,0)
+    Temps = Comparer_temps_moyenne(50,50,0)
     erreur_avec_cond(100, 5)
     cond_fonction_taille(100, 100)
+
 """
