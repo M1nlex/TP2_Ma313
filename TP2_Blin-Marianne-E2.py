@@ -16,6 +16,16 @@ def Inv_definie_positive(n): #Det(A) ≠ 0 ⇔ A inversible
         d = np.linalg.det(A)
     return A
 
+def matrice_inversible(n):
+    d=0
+    while d==0:
+        try:
+            M = np.random.randn(n,n)
+            np.linalg.inv(M)
+            d=1
+        except:
+            d=0
+    return M
 
 def DecompositionGS(A):
 
@@ -41,11 +51,10 @@ def DecompositionGS(A):
     # print("Q = ", Q, "\n", "R = ", R)
     return Q, R
 
-
 def Verif(A, Q, R):
 
     # Check if QR = A
-    if (Q@R).all() == A.all():
+    if (np.dot(Q,R)).all() == A.all():
         print("QR = A")
     else:
         print("QR != A, erreur.")
@@ -58,11 +67,10 @@ def Verif(A, Q, R):
 
     # Check if Q orthogonale
     n = Q.shape[0]
-    if (Q@Q.T).all() == (np.identity(n)).all():
-        print("Q orthogonale.")
+    if (np.dot(Q,Q.T)).all() == (np.identity(n)).all():
+        print("Q orthogonale.","\n")
     else:
-        print("Q non orthogonale, erreur.")
-
+        print("Q non orthogonale, erreur.","\n")
 
 def ResolutionSystTriSup(Taug):  # Résolution d'un système triangulaire supérieur
     n, m = Taug.shape
@@ -74,22 +82,19 @@ def ResolutionSystTriSup(Taug):  # Résolution d'un système triangulaire supér
         X[k] = (Taug[k, -1] - S)/Taug[k, k]
     return X
 
-
 def ResolGS(A, b):
     [Q, R] = DecompositionGS(A)
     Taug = np.column_stack((R, Q.T@b))
     X = ResolutionSystTriSup(Taug)  # RX = Qtb
     return X
 
-
 def Verif2(X, A, B):
     # Check if X = X_verif
     X_verif = np.linalg.solve(A,B)
     if (X).all() == (X_verif).all():
-        print("X = X_verif, la fonction fonctionne :)")
+        print("X_GS = X_numpy, la fonction fonctionne :)")
     else:
         print("Erreur.")
-
 
 def Comparer_temps(limTaille=100):
     TC = [] #Temps de calcul décompo Cholesky
@@ -221,7 +226,11 @@ def test_non_inversible():
     except:
         print("non")
 
-def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
+def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10, DefPosi=1):
+    if DefPosi==1:
+        print("Les matrices seront définies positives, toutes les méthodes seront testées")
+    else:
+        print("Les matrices seront seulement inversibles, la méthode de Cholesky ne sera pas utilisée")
     TC = [] #Temps de calcul décompo Cholesky
     TGSCP = [] #Temps de calcul GaussSansChoixPivot
     TGCPP = [] #Temps de calcul GaussChoixPivotPartiel
@@ -260,20 +269,27 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
         e7 = []
 
         N.append(k)
+        print(k)
 
         for j in range(0,NbrParTaille):
 
             # Génération matrice commune pour toutes les solutions
-            A = Inv_definie_positive(k)
+            if DefPosi==1:
+                A = Inv_definie_positive(k)
+            else:
+                A = matrice_inversible(k)
             B = np.random.randn(k,1)
 
             # Calcul temps de calcul pour chaque méthode
-            t0 = time.perf_counter()
-            X1 = np.transpose([ResolCholesky(A,B)])
-            t = time.perf_counter()
+            if DefPosi==1:
+                t0 = time.perf_counter()
+                X1 = np.transpose([ResolCholesky(A,B)])
+                t = time.perf_counter()
 
-            a = t - t0
-            ae = np.linalg.norm( abs((A@X1)-B) )
+                a = t - t0
+                ae = np.linalg.norm( abs((A@X1)-B) )
+                l1.append(a)
+                e1.append(ae)
 
             t1 = time.perf_counter()
             X2 = np.transpose([Gauss(A,B)])
@@ -318,15 +334,16 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
             ge = np.linalg.norm( abs((A@X7)-B) )
 
             # Ajout de la valeur dans la liste pour le calcul de moyenne de temps
-            l1.append(a)
+
             l2.append(b)
             l3.append(c)
             l4.append(d)
             l5.append(e)
             l6.append(f)
             l7.append(g)
+
             # Ajout de la valeur dans la liste pour le calcul de moyenne d'erreur
-            e1.append(ae)
+
             e2.append(be)
             e3.append(ce)
             e4.append(de)
@@ -335,7 +352,10 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
             e7.append(ge)
 
         # Ajout valeurs du temps de calcul pour cette itération
-        TC.append(sum(l1)/NbrParTaille)
+        if DefPosi==1:
+            TC.append(sum(l1)/NbrParTaille)
+            TCE.append(sum(e1)/NbrParTaille)
+
         TGSCP.append(sum(l2)/NbrParTaille)
         TGCPP.append(sum(l3)/NbrParTaille)
         TGCPT.append(sum(l4)/NbrParTaille)
@@ -344,7 +364,7 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
         TNP.append(sum(l7)/NbrParTaille)
 
         # Ajout valeurs du temps de calcul pour cette itération
-        TCE.append(sum(e1)/NbrParTaille)
+
         TGSCPE.append(sum(e2)/NbrParTaille)
         TGCPPE.append(sum(e3)/NbrParTaille)
         TGCPTE.append(sum(e4)/NbrParTaille)
@@ -358,8 +378,8 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
 
     plt.xlabel("Taille de la matrice")
     #plt.xscale("log")
-
-    plt.plot(N,TC,".:",label = "Décomposition de Cholesky")
+    if DefPosi==1:
+        plt.plot(N,TC,".:",label = "Décomposition de Cholesky")
     plt.plot(N,TGSCP,".:",label = "Gauss sans choix pivot")
     plt.plot(N,TGCPP,".:",label = "Gauss choix pivot partiel")
     plt.plot(N,TGCPT,".:",label = "Gauss choix pivot total")
@@ -374,18 +394,18 @@ def Comparer_temps_moyenne(limTaille=100,NbrParTaille=10):
 
     # Deuxième graph (erreur)
     plt.ylabel("Erreur relative")
-    #plt.yscale("log")
+    plt.yscale("log")
 
     plt.xlabel("Taille de la matrice")
     #plt.xscale("log")
-
-    plt.plot(N,TCE,".:",label = "Décomposition de Cholesky")
+    if DefPosi==1:
+        plt.plot(N,TCE,".:",label = "Décomposition de Cholesky")
     plt.plot(N,TGSCPE,".:",label = "Gauss sans choix pivot")
     plt.plot(N,TGCPPE,".:",label = "Gauss choix pivot partiel")
     plt.plot(N,TGCPTE,".:",label = "Gauss choix pivot total")
     plt.plot(N,TGSE,".:",label = "Gram-Schmidt")
     plt.plot(N,TLUE,".:",label = "Décomposition LU")
-    #plt.plot(N,TNPE,".:",label = "Numpy")
+    plt.plot(N,TNPE,".:",label = "Numpy")
 
     plt.legend(loc = "upper left")
     plt.title("Erreur relative de X en fonction de la taille des matrices\n", fontsize=12)
@@ -464,20 +484,45 @@ def cond_fonction_taille(n, t):
 
 
 if __name__ == '__main__':
+
     """
-    # partie1
+    # partie 1.1 : test décompo QR sur matrice du TD
     A = np.array([[6., 6., 16.], [-3., -9., -2.], [6., -6., -8.]])
     [Q, R] = DecompositionGS(A)
+    print("Q = ", Q, "\n", "R = ", R)
     V = Verif (A, Q, R)
-    # Partie2
+
+    # partie 1.2 : test décompo QR sur matrice aléatoire de taille n choisie
+    n_1 = int(input("Taille désirée : "))
+    Aleatoire = np.random.randn(n_1,n_1)
+    [Q_1, R_1] = DecompositionGS(Aleatoire)
+    print("Q = ", Q_1, "\n", "R = ", R_1)
+    # Vérif
+    if (np.dot(Q_1,R_1)).all() == Aleatoire.all():
+        print("QR = A")
+    else:
+        print("QR != A, erreur.")
+    if np.allclose(R, np.triu(R)):
+        print("R triangulaire sup.")
+    else:
+        print("R n'est pas triangulaire sup., erreur.")
+    if abs((np.dot(Q_1,(Q_1).T) - np.identity(n_1)).all()) <= 0.01:
+        print("Q orthogonale.","\n")
+    else:
+        print("Q non orthogonale, erreur.","\n")
+    """
+    """
+    # Partie 2 : résolution des systèmes aléatoires
     n = int(input("Taille désirée : "))
     C = Inv_definie_positive(n)
     D = np.random.randn(n, 1)
+    print("Soit A une matrice de taille n = ", n, "\n", "A = ", C, "\n", "On veut résoudre AX = B avec B = ", D)
     X = ResolGS(C, D)
+    print("Avec Gram-Schmidt, on obtient X_GS = ", X)
+    print("On vérifie avec X calculé par numpy :")
     V_2 = Verif2(X, C, D)
-    #Partie3
     """
-    #Temps = Comparer_temps_moyenne(10,10)
+    Temps = Comparer_temps_moyenne(50,50,0)
 
     erreur_avec_cond(100, 5)
     cond_fonction_taille(100, 100)
